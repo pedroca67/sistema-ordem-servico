@@ -153,4 +153,28 @@ public class OrdemServicoController {
         List<OrdemServico> ordens = ordemServicoService.buscarConcluidasNoPeriodo(dataInicio, dataFim);
         return ResponseEntity.ok(ordens);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<OrdemServico> atualizarGeral(@PathVariable Long id, @Valid @RequestBody OrdemServicoDTO dto) {
+        try {
+            OrdemServico atualizada = ordemServicoService.atualizarGeral(id, dto);
+            return ResponseEntity.ok(atualizada);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Exclui uma ordem de serviço pelo ID
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirOrdemServico(@PathVariable Long id) {
+        try {
+            ordemServicoService.excluir(id);
+            return ResponseEntity.noContent().build(); // Retorna 204 (Sucesso sem conteúdo)
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
 }

@@ -128,4 +128,31 @@ public class OrdemServicoService {
     public List<OrdemServico> buscarConcluidasNoPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
         return ordemServicoRepository.findConcluidasNoPeriodo(dataInicio, dataFim);
     }
+    public OrdemServico atualizarGeral(Long id, OrdemServicoDTO dto) {
+        // 1. Busca a OS atual
+        OrdemServico os = ordemServicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
+
+        // 2. Atualiza os campos básicos
+        os.setDescricaoProblema(dto.getDescricaoProblema());
+        os.setObservacoes(dto.getObservacoes());
+        os.setValor(dto.getValor());
+
+        // 3. Atualiza o Status (convertendo String para o Enum)
+        if (dto.getStatus() != null) {
+            os.setStatus(OrdemServico.StatusOrdem.valueOf(dto.getStatus()));
+        }
+
+        // 4. Salva as mudanças
+        return ordemServicoRepository.save(os);
+
+
+    }
+    public void excluir(Long id) {
+        // Busca para garantir que existe antes de tentar deletar
+        OrdemServico os = ordemServicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
+
+        ordemServicoRepository.delete(os);
+    }
 }

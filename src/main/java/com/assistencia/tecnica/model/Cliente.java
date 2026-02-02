@@ -1,5 +1,6 @@
 package com.assistencia.tecnica.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +40,7 @@ public class Cliente {
     private LocalDateTime dataCadastro;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("cliente")
     private List<OrdemServico> ordensServico = new ArrayList<>();
 
     public Cliente() {
