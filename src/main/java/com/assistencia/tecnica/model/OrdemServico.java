@@ -37,6 +37,11 @@ public class OrdemServico {
     @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
 
+    @PrePersist
+    protected void onCreate() {
+        this.dataAbertura = LocalDateTime.now();
+    }
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     @JsonIgnoreProperties("ordensServico")

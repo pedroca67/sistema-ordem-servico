@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador REST para operações com ordens de serviço
@@ -174,6 +176,36 @@ public class OrdemServicoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+
+
+
+    @GetMapping("/estatisticas/geral")
+    public ResponseEntity<Map<String, Object>> getEstatisticasGerais() {
+        List<OrdemServico> todas = ordemServicoService.listarTodas();
+
+        // Calcula o faturamento total somando apenas as CONCLUIDAS
+        BigDecimal totalFaturado = todas.stream()
+                .filter(os -> os.getStatus() == OrdemServico.StatusOrdem.CONCLUIDA)
+                .map(OrdemServico::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long concluidas = todas.stream()
+                .filter(os -> os.getStatus() == OrdemServico.StatusOrdem.CONCLUIDA)
+                .count();
+
+        long abertas = todas.stream()
+                .filter(os -> os.getStatus() == OrdemServico.StatusOrdem.ABERTA)
+                .count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("faturamentoTotal", totalFaturado);
+        stats.put("qtdConcluidas", concluidas);
+        stats.put("qtdAbertas", abertas);
+        stats.put("qtdGeral", todas.size());
+
+        return ResponseEntity.ok(stats);
     }
 
 

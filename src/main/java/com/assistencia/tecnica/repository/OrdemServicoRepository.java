@@ -38,7 +38,7 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
      * @return lista de ordens de serviço concluídas no período
      */
     @Query("SELECT o FROM OrdemServico o WHERE o.status = 'CONCLUIDA' " +
-            "AND o.dataConclusao BETWEEN :dataInicio AND :dataFim")
+            "AND o.dataAbertura BETWEEN :dataInicio AND :dataFim")
     List<OrdemServico> findConcluidasNoPeriodo(
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim);
@@ -51,7 +51,7 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
      */
     @Query("SELECT COALESCE(SUM(o.valor), 0) FROM OrdemServico o " +
             "WHERE o.status = 'CONCLUIDA' " +
-            "AND o.dataConclusao BETWEEN :dataInicio AND :dataFim")
+            "AND o.dataAbertura BETWEEN :dataInicio AND :dataFim")
     BigDecimal calcularTotalFaturadoNoPeriodo(
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim);

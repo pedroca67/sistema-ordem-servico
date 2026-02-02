@@ -27,18 +27,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // ADICIONE ESTA LINHA AQUI
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
                 // API REST não usa CSRF
                 .csrf(csrf -> csrf.disable())
 
                 // Regras de autorização
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoint público (teste da API)
                         .requestMatchers("/").permitAll()
-
-                        // Tudo que for /api precisa estar autenticado
                         .requestMatchers("/api/**").authenticated()
-
-                        // Qualquer outra rota exige autenticação
                         .anyRequest().authenticated()
                 )
 
@@ -48,19 +46,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Usuário padrão do sistema (admin/admin)
-     */
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        return new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin"))
-                        .roles("ADMIN")
-                        .build()
-        );
-    }
+
 
     /**
      * Encoder de senha (BCrypt)
