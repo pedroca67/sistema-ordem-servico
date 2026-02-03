@@ -41,7 +41,7 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
             "AND o.dataAbertura BETWEEN :dataInicio AND :dataFim")
     List<OrdemServico> findConcluidasNoPeriodo(
             @Param("dataInicio") LocalDateTime dataInicio,
-            @Param("dataFim") LocalDateTime dataFim);
+            @Param("dataFim") LocalDateTime dataFim );
 
     /**
      * Calcula o valor total faturado em um período
