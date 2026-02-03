@@ -15,12 +15,12 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     /**
-     * Busca clientes pelo nome (case-insensitive e partial match)
-     * @param nome nome ou parte do nome do cliente
+     * Busca clientes pelo nome ou CPF (case-insensitive e partial match)
+     * @param termo nome, CPF ou parte deles
      * @return lista de clientes encontrados
      */
-    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
-    List<Cliente> findByNomeContainingIgnoreCase(@Param("nome") String nome);
+    @Query("SELECT c FROM Cliente c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :termo, '%')) OR c.cpf LIKE CONCAT('%', :termo, '%')")
+    List<Cliente> findByNomeContainingIgnoreCase(@Param("termo") String termo);
 
     /**
      * Verifica se existe um cliente com o CPF informado
